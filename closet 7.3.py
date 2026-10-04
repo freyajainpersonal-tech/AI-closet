@@ -1351,54 +1351,98 @@ def get_gemini_api_key():
 
 def ask_gemini(prompt):
 
-    if genai is None:
-
-        return (
-            "The Google Gemini package is not installed.\n\n"
-            "Run this in Command Prompt:\n\n"
-            "py -3.14 -m pip install -U google-genai"
-        )
-
     api_key = get_gemini_api_key()
 
     if not api_key:
-
         return (
             "Google Gemini is not configured yet.\n\n"
             "Add GEMINI_API_KEY to your Streamlit Secrets."
         )
 
+    url = (
+        "https://generativelanguage.googleapis.com/"
+        f"v1beta/models/{GEMINI_MODEL}:generateContent"
+    )
+
+    headers = {
+        "x-goog-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]
+    }
+
     try:
-
-        client = genai.Client(
-            api_key=api_key
+        response = requests.post(
+            url,
+            headers=headers,
+            json=payload,
+            timeout=60
         )
 
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt
+        if response.status_code != 200:
+            try:
+                error_data = response.json()
+                error_message = (
+                    error_data.get("error", {}).get("message")
+                    or response.text
+                )
+            except Exception:
+                error_message = response.text
+
+            return (
+                "There was a problem communicating with Google Gemini.\n\n"
+                f"HTTP {response.status_code}: {error_message}"
+            )
+
+        data = response.json()
+        candidates = data.get("candidates", [])
+
+        if not candidates:
+            return (
+                "Gemini connected successfully, "
+                "but returned no response."
+            )
+
+        parts = (
+            candidates[0]
+            .get("content", {})
+            .get("parts", [])
         )
 
-        answer = getattr(
-            response,
-            "text",
-            ""
-        )
+        answer = "".join(
+            part.get("text", "")
+            for part in parts
+            if isinstance(part, dict)
+        ).strip()
 
         if answer:
-
-            return answer.strip()
+            return answer
 
         return (
             "Gemini connected successfully, "
             "but it returned an empty response."
         )
 
-    except Exception as e:
+    except requests.exceptions.Timeout:
+        return "Gemini took too long to respond. Please try again."
 
+    except requests.exceptions.RequestException as e:
         return (
-            "There was a problem communicating "
-            "with Google Gemini.\n\n"
+            "There was a problem communicating with Google Gemini.\n\n"
+            f"{type(e).__name__}: {e}"
+        )
+
+    except Exception as e:
+        return (
+            "Gemini AI error.\n\n"
             f"{type(e).__name__}: {e}"
         )
 
