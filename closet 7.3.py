@@ -37,11 +37,7 @@ except ImportError:
 # ============================================================
 
 if sys.version_info < (3, 10):
-
-    st.error(
-        "Python 3.10 or newer is required."
-    )
-
+    st.error("Python 3.10 or newer is required.")
     st.stop()
 
 
@@ -104,6 +100,7 @@ os.makedirs(
 # AI SETTINGS
 # ============================================================
 
+# Google currently documents this model in its Gemini API examples.
 GEMINI_MODEL = "gemini-3.8-flash"
 
 
@@ -115,7 +112,6 @@ FASHN_SPACE = "fashn-ai/fashn-vton-1.5"
 
 
 def get_huggingface_token():
-
     """
     Get the Hugging Face token securely.
 
@@ -125,20 +121,15 @@ def get_huggingface_token():
     """
 
     try:
-
         token = st.secrets.get(
             "HF_TOKEN",
             ""
         )
 
         if token:
-
-            return str(
-                token
-            ).strip()
+            return str(token).strip()
 
     except Exception:
-
         pass
 
     token = os.getenv(
@@ -154,7 +145,6 @@ def get_huggingface_token():
 # ============================================================
 
 AESTHETICS = [
-
     "Cottagecore",
     "Fairycore",
     "Light Academia",
@@ -172,7 +162,6 @@ AESTHETICS = [
     "Kawaii",
     "Lolita",
     "Boho"
-
 ]
 
 
@@ -181,7 +170,6 @@ AESTHETICS = [
 # ============================================================
 
 CATEGORIES = [
-
     "Top",
     "T-Shirt",
     "Shirt",
@@ -200,7 +188,6 @@ CATEGORIES = [
     "Bag",
     "Accessory",
     "Other"
-
 ]
 
 
@@ -211,453 +198,234 @@ CATEGORIES = [
 AESTHETIC_RULES = {
 
     "Cottagecore": {
-
         "colors": [
-            "Green",
-            "White",
-            "Yellow",
-            "Pink",
-            "Brown"
+            "Green", "White", "Yellow", "Pink", "Brown"
         ],
-
         "categories": [
-            "Dress",
-            "Blouse",
-            "Cardigan",
-            "Skirt"
+            "Dress", "Blouse", "Cardigan", "Skirt"
         ],
-
         "keywords": [
-            "floral",
-            "linen",
-            "lace",
-            "cottage",
-            "romantic",
-            "nature"
+            "floral", "linen", "lace",
+            "cottage", "romantic", "nature"
         ]
-
     },
 
     "Fairycore": {
-
         "colors": [
-            "Pink",
-            "Purple",
-            "Green",
-            "White",
-            "Cyan"
+            "Pink", "Purple", "Green", "White", "Cyan"
         ],
-
         "categories": [
-            "Dress",
-            "Skirt",
-            "Blouse",
-            "Cardigan"
+            "Dress", "Skirt", "Blouse", "Cardigan"
         ],
-
         "keywords": [
-            "fairy",
-            "sparkle",
-            "sheer",
-            "floral",
-            "wings"
+            "fairy", "sparkle", "sheer",
+            "floral", "wings"
         ]
-
     },
 
     "Light Academia": {
-
         "colors": [
-            "White",
-            "Brown",
-            "Beige",
-            "Gray",
-            "Yellow"
+            "White", "Brown", "Beige", "Gray", "Yellow"
         ],
-
         "categories": [
-            "Shirt",
-            "Blouse",
-            "Sweater",
-            "Cardigan",
-            "Pants",
-            "Skirt"
+            "Shirt", "Blouse", "Sweater",
+            "Cardigan", "Pants", "Skirt"
         ],
-
         "keywords": [
-            "academic",
-            "classic",
-            "knit",
-            "preppy",
-            "vintage"
+            "academic", "classic",
+            "knit", "preppy", "vintage"
         ]
-
     },
 
     "Dark Academia": {
-
         "colors": [
-            "Black",
-            "Brown",
-            "Gray",
-            "White",
-            "Green"
+            "Black", "Brown", "Gray", "White", "Green"
         ],
-
         "categories": [
-            "Shirt",
-            "Sweater",
-            "Cardigan",
-            "Jacket",
-            "Pants",
-            "Skirt"
+            "Shirt", "Sweater", "Cardigan",
+            "Jacket", "Pants", "Skirt"
         ],
-
         "keywords": [
-            "academic",
-            "tweed",
-            "classic",
-            "vintage",
-            "dark"
+            "academic", "tweed",
+            "classic", "vintage", "dark"
         ]
-
     },
 
     "Clean Girl": {
-
         "colors": [
-            "White",
-            "Black",
-            "Gray",
-            "Beige"
+            "White", "Black", "Gray", "Beige"
         ],
-
         "categories": [
-            "T-Shirt",
-            "Blouse",
-            "Pants",
-            "Jeans",
-            "Cardigan"
+            "T-Shirt", "Blouse",
+            "Pants", "Jeans", "Cardigan"
         ],
-
         "keywords": [
-            "minimal",
-            "simple",
-            "basic",
-            "clean"
+            "minimal", "simple", "basic", "clean"
         ]
-
     },
 
     "Cyberpunk": {
-
         "colors": [
-            "Black",
-            "Purple",
-            "Blue",
-            "Cyan",
-            "Red"
+            "Black", "Purple", "Blue", "Cyan", "Red"
         ],
-
         "categories": [
-            "Hoodie",
-            "Jacket",
-            "Pants",
-            "T-Shirt"
+            "Hoodie", "Jacket", "Pants", "T-Shirt"
         ],
-
         "keywords": [
-            "cyber",
-            "tech",
-            "neon",
-            "futuristic",
-            "utility"
+            "cyber", "tech", "neon",
+            "futuristic", "utility"
         ]
-
     },
 
     "Y2K": {
-
         "colors": [
-            "Pink",
-            "Blue",
-            "Purple",
-            "White"
+            "Pink", "Blue", "Purple", "White"
         ],
-
         "categories": [
-            "T-Shirt",
-            "Top",
-            "Skirt",
-            "Jeans",
-            "Pants"
+            "T-Shirt", "Top", "Skirt", "Jeans", "Pants"
         ],
-
         "keywords": [
-            "y2k",
-            "2000s",
-            "baby tee",
-            "denim",
-            "retro"
+            "y2k", "2000s",
+            "baby tee", "denim", "retro"
         ]
-
     },
 
     "Vaporwave": {
-
         "colors": [
-            "Pink",
-            "Purple",
-            "Cyan",
-            "Blue"
+            "Pink", "Purple", "Cyan", "Blue"
         ],
-
         "categories": [
-            "T-Shirt",
-            "Hoodie",
-            "Top"
+            "T-Shirt", "Hoodie", "Top"
         ],
-
         "keywords": [
-            "vaporwave",
-            "neon",
-            "retro",
-            "digital"
+            "vaporwave", "neon",
+            "retro", "digital"
         ]
-
     },
 
     "Goblin Core": {
-
         "colors": [
-            "Green",
-            "Brown",
-            "Gray"
+            "Green", "Brown", "Gray"
         ],
-
         "categories": [
-            "Sweater",
-            "Hoodie",
-            "Pants",
-            "Jacket"
+            "Sweater", "Hoodie",
+            "Pants", "Jacket"
         ],
-
         "keywords": [
-            "moss",
-            "forest",
-            "nature",
-            "earth",
-            "goblin"
+            "moss", "forest",
+            "nature", "earth", "goblin"
         ]
-
     },
 
     "Old Money": {
-
         "colors": [
-            "White",
-            "Black",
-            "Brown",
-            "Beige",
-            "Navy"
+            "White", "Black", "Brown", "Beige", "Navy"
         ],
-
         "categories": [
-            "Blouse",
-            "Shirt",
-            "Cardigan",
-            "Coat",
-            "Pants",
-            "Skirt"
+            "Blouse", "Shirt", "Cardigan",
+            "Coat", "Pants", "Skirt"
         ],
-
         "keywords": [
-            "classic",
-            "tailored",
-            "preppy",
-            "elegant"
+            "classic", "tailored",
+            "preppy", "elegant"
         ]
-
     },
 
     "Goth": {
-
         "colors": [
-            "Black",
-            "Purple",
-            "Red",
-            "Gray"
+            "Black", "Purple", "Red", "Gray"
         ],
-
         "categories": [
-            "Dress",
-            "T-Shirt",
-            "Hoodie",
-            "Jacket",
-            "Skirt"
+            "Dress", "T-Shirt", "Hoodie",
+            "Jacket", "Skirt"
         ],
-
         "keywords": [
-            "goth",
-            "dark",
-            "lace",
-            "alternative"
+            "goth", "dark",
+            "lace", "alternative"
         ]
-
     },
 
     "Mid-Century": {
-
         "colors": [
-            "Brown",
-            "Yellow",
-            "Green",
-            "Orange"
+            "Brown", "Yellow", "Green", "Orange"
         ],
-
         "categories": [
-            "Dress",
-            "Blouse",
-            "Shirt",
-            "Skirt",
-            "Pants"
+            "Dress", "Blouse",
+            "Shirt", "Skirt", "Pants"
         ],
-
         "keywords": [
-            "retro",
-            "vintage",
-            "mid century"
+            "retro", "vintage", "mid century"
         ]
-
     },
 
     "Indie": {
-
         "colors": [
-            "Green",
-            "Brown",
-            "Black",
-            "Red"
+            "Green", "Brown", "Black", "Red"
         ],
-
         "categories": [
-            "T-Shirt",
-            "Sweater",
-            "Hoodie",
-            "Jeans",
-            "Jacket"
+            "T-Shirt", "Sweater",
+            "Hoodie", "Jeans", "Jacket"
         ],
-
         "keywords": [
-            "indie",
-            "band",
-            "vintage",
-            "alternative"
+            "indie", "band",
+            "vintage", "alternative"
         ]
-
     },
 
     "Minimalist": {
-
         "colors": [
-            "White",
-            "Black",
-            "Gray",
-            "Beige"
+            "White", "Black", "Gray", "Beige"
         ],
-
         "categories": [
-            "T-Shirt",
-            "Shirt",
-            "Blouse",
-            "Pants",
-            "Jeans"
+            "T-Shirt", "Shirt",
+            "Blouse", "Pants", "Jeans"
         ],
-
         "keywords": [
-            "minimal",
-            "simple",
-            "basic"
+            "minimal", "simple", "basic"
         ]
-
     },
 
     "Kawaii": {
-
         "colors": [
-            "Pink",
-            "White",
-            "Purple",
-            "Cyan"
+            "Pink", "White", "Purple", "Cyan"
         ],
-
         "categories": [
-            "Top",
-            "Blouse",
-            "Skirt",
-            "Dress",
-            "Cardigan"
+            "Top", "Blouse",
+            "Skirt", "Dress", "Cardigan"
         ],
-
         "keywords": [
-            "kawaii",
-            "cute",
-            "pastel",
-            "character"
+            "kawaii", "cute",
+            "pastel", "character"
         ]
-
     },
 
     "Lolita": {
-
         "colors": [
-            "Black",
-            "White",
-            "Pink",
-            "Red"
+            "Black", "White", "Pink", "Red"
         ],
-
         "categories": [
-            "Dress",
-            "Skirt",
-            "Blouse",
-            "Cardigan"
+            "Dress", "Skirt",
+            "Blouse", "Cardigan"
         ],
-
         "keywords": [
-            "lolita",
-            "lace",
-            "ruffle",
-            "bow"
+            "lolita", "lace",
+            "ruffle", "bow"
         ]
-
     },
 
     "Boho": {
-
         "colors": [
-            "Brown",
-            "White",
-            "Green",
-            "Orange"
+            "Brown", "White", "Green", "Orange"
         ],
-
         "categories": [
-            "Dress",
-            "Blouse",
-            "Skirt",
-            "Cardigan"
+            "Dress", "Blouse",
+            "Skirt", "Cardigan"
         ],
-
         "keywords": [
-            "boho",
-            "bohemian",
-            "fringe",
-            "embroidered"
+            "boho", "bohemian",
+            "fringe", "embroidered"
         ]
-
     }
-
 }
 
 
@@ -668,30 +436,22 @@ AESTHETIC_RULES = {
 def load_wardrobe():
 
     if not os.path.exists(DATA_FILE):
-
         return []
 
     try:
-
         with open(
             DATA_FILE,
             "r",
             encoding="utf-8"
         ) as f:
-
             data = json.load(f)
 
-        if isinstance(
-            data,
-            list
-        ):
-
+        if isinstance(data, list):
             return data
 
         return []
 
     except Exception:
-
         return []
 
 
@@ -702,7 +462,6 @@ def save_wardrobe(wardrobe):
         "w",
         encoding="utf-8"
     ) as f:
-
         json.dump(
             wardrobe,
             f,
@@ -718,30 +477,22 @@ def save_wardrobe(wardrobe):
 def load_profile():
 
     if not os.path.exists(PROFILE_FILE):
-
         return {}
 
     try:
-
         with open(
             PROFILE_FILE,
             "r",
             encoding="utf-8"
         ) as f:
-
             data = json.load(f)
 
-        if isinstance(
-            data,
-            dict
-        ):
-
+        if isinstance(data, dict):
             return data
 
         return {}
 
     except Exception:
-
         return {}
 
 
@@ -752,7 +503,6 @@ def save_profile(profile):
         "w",
         encoding="utf-8"
     ) as f:
-
         json.dump(
             profile,
             f,
@@ -769,13 +519,9 @@ def analyze_image(image):
 
     try:
 
-        image_array = np.array(
-            image
-        )
+        image_array = np.array(image)
 
-        if len(
-            image_array.shape
-        ) == 3:
+        if len(image_array.shape) == 3:
 
             image_array = cv2.cvtColor(
                 image_array,
@@ -793,39 +539,21 @@ def analyze_image(image):
         )
 
         return {
-
-            "hue": float(
-                average_hsv[0]
-            ),
-
-            "saturation": float(
-                average_hsv[1]
-            ),
-
-            "brightness": float(
-                average_hsv[2]
-            ),
-
+            "hue": float(average_hsv[0]),
+            "saturation": float(average_hsv[1]),
+            "brightness": float(average_hsv[2]),
             "width": image.width,
-
             "height": image.height
-
         }
 
     except Exception:
 
         return {
-
             "hue": 0,
-
             "saturation": 0,
-
             "brightness": 0,
-
             "width": image.width,
-
             "height": image.height
-
         }
 
 
@@ -840,43 +568,33 @@ def get_color_name(hsv):
     v = hsv["brightness"]
 
     if v < 50:
-
         return "Black"
 
     if s < 35 and v > 200:
-
         return "White"
 
     if s < 45:
-
         return "Gray"
 
     if h < 10 or h >= 170:
-
         return "Red"
 
     if h < 25:
-
         return "Orange"
 
     if h < 35:
-
         return "Yellow"
 
     if h < 85:
-
         return "Green"
 
     if h < 100:
-
         return "Cyan"
 
     if h < 135:
-
         return "Blue"
 
     if h < 160:
-
         return "Purple"
 
     return "Pink"
@@ -891,15 +609,12 @@ def suggest_category(filename):
     name = filename.lower()
 
     if "dress" in name:
-
         return "Dress"
 
     if "shirt" in name:
-
         return "Shirt"
 
     if "blouse" in name:
-
         return "Blouse"
 
     if (
@@ -907,58 +622,45 @@ def suggest_category(filename):
         or "t-shirt" in name
         or "tee" in name
     ):
-
         return "T-Shirt"
 
     if "sweater" in name:
-
         return "Sweater"
 
     if "cardigan" in name:
-
         return "Cardigan"
 
     if "hoodie" in name:
-
         return "Hoodie"
 
     if "jacket" in name:
-
         return "Jacket"
 
     if "coat" in name:
-
         return "Coat"
 
     if "skirt" in name:
-
         return "Skirt"
 
     if "jean" in name:
-
         return "Jeans"
 
     if (
         "pant" in name
         or "trouser" in name
     ):
-
         return "Pants"
 
     if "short" in name:
-
         return "Shorts"
 
     if "shoe" in name:
-
         return "Shoes"
 
     if "bag" in name:
-
         return "Bag"
 
     if "accessory" in name:
-
         return "Accessory"
 
     return "Other"
@@ -974,7 +676,6 @@ def search_wardrobe(
 ):
 
     if not query:
-
         return wardrobe
 
     query = query.lower()
@@ -984,49 +685,15 @@ def search_wardrobe(
     for item in wardrobe:
 
         searchable = " ".join([
-
-            str(
-                item.get(
-                    "name",
-                    ""
-                )
-            ),
-
-            str(
-                item.get(
-                    "category",
-                    ""
-                )
-            ),
-
-            str(
-                item.get(
-                    "color",
-                    ""
-                )
-            ),
-
-            str(
-                item.get(
-                    "notes",
-                    ""
-                )
-            ),
-
-            " ".join(
-                item.get(
-                    "style_tags",
-                    []
-                )
-            )
-
+            str(item.get("name", "")),
+            str(item.get("category", "")),
+            str(item.get("color", "")),
+            str(item.get("notes", "")),
+            " ".join(item.get("style_tags", []))
         ]).lower()
 
         if query in searchable:
-
-            results.append(
-                item
-            )
+            results.append(item)
 
     return results
 
@@ -1073,14 +740,12 @@ def score_item(
         "colors",
         []
     ):
-
         score += 4
 
     if item_category in rules.get(
         "categories",
         []
     ):
-
         score += 3
 
     combined_text = (
@@ -1095,7 +760,6 @@ def score_item(
     ):
 
         if keyword.lower() in combined_text:
-
             score += 2
 
     return score
@@ -1135,8 +799,7 @@ def recommend_items(
 
     return [
         item
-        for score, item
-        in scored
+        for score, item in scored
     ]
 
 
@@ -1155,11 +818,9 @@ def create_outfit(
     )
 
     if not recommendations:
-
         return []
 
     preferred_order = [
-
         "Dress",
         "Top",
         "T-Shirt",
@@ -1177,7 +838,6 @@ def create_outfit(
         "Shoes",
         "Bag",
         "Accessory"
-
     ]
 
     selected = []
@@ -1198,9 +858,7 @@ def create_outfit(
                 and item_category not in categories_used
             ):
 
-                selected.append(
-                    item
-                )
+                selected.append(item)
 
                 categories_used.add(
                     item_category
@@ -1209,31 +867,21 @@ def create_outfit(
                 break
 
     has_dress = any(
-        item.get(
-            "category"
-        ) == "Dress"
+        item.get("category") == "Dress"
         for item in selected
     )
 
     if has_dress:
 
         selected = [
-
             item
-
             for item in selected
-
-            if item.get(
-                "category"
-            ) not in [
-
+            if item.get("category") not in [
                 "Pants",
                 "Jeans",
                 "Shorts",
                 "Skirt"
-
             ]
-
         ]
 
     return selected
@@ -1254,12 +902,10 @@ def build_ai_prompt(
     for item in wardrobe:
 
         wardrobe_text.append(
-
             f"- {item.get('name', 'Unnamed')} | "
             f"{item.get('category', '')} | "
             f"{item.get('color', '')} | "
             f"{item.get('notes', '')}"
-
         )
 
     wardrobe_context = "\n".join(
@@ -1267,7 +913,6 @@ def build_ai_prompt(
     )
 
     if not wardrobe_context:
-
         wardrobe_context = (
             "The wardrobe is currently empty."
         )
@@ -1328,13 +973,9 @@ def get_gemini_api_key():
         )
 
         if key:
-
-            return str(
-                key
-            ).strip()
+            return str(key).strip()
 
     except Exception:
-
         pass
 
     key = os.getenv(
@@ -1354,95 +995,97 @@ def ask_gemini(prompt):
     api_key = get_gemini_api_key()
 
     if not api_key:
+
         return (
             "Google Gemini is not configured yet.\n\n"
             "Add GEMINI_API_KEY to your Streamlit Secrets."
         )
 
-    url = (
-        "https://generativelanguage.googleapis.com/"
-        f"v1beta/models/{GEMINI_MODEL}:generateContent"
-    )
+    if genai is None:
 
-    headers = {
-        "x-goog-api-key": api_key,
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": prompt}
-                ]
-            }
-        ]
-    }
+        return (
+            "The Google Gemini SDK is not installed.\n\n"
+            "Run this in PowerShell:\n\n"
+            "py -3.14 -m pip install -U google-genai\n\n"
+            "Then restart Streamlit."
+        )
 
     try:
-        response = requests.post(
-            url,
-            headers=headers,
-            json=payload,
-            timeout=60
+
+        client = genai.Client(
+            api_key=api_key
         )
 
-        if response.status_code != 200:
-            try:
-                error_data = response.json()
-                error_message = (
-                    error_data.get("error", {}).get("message")
-                    or response.text
-                )
-            except Exception:
-                error_message = response.text
-
-            return (
-                "There was a problem communicating with Google Gemini.\n\n"
-                f"HTTP {response.status_code}: {error_message}"
-            )
-
-        data = response.json()
-        candidates = data.get("candidates", [])
-
-        if not candidates:
-            return (
-                "Gemini connected successfully, "
-                "but returned no response."
-            )
-
-        parts = (
-            candidates[0]
-            .get("content", {})
-            .get("parts", [])
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=prompt
         )
 
-        answer = "".join(
-            part.get("text", "")
-            for part in parts
-            if isinstance(part, dict)
-        ).strip()
+        answer = getattr(
+            response,
+            "text",
+            ""
+        )
 
         if answer:
-            return answer
+
+            return answer.strip()
 
         return (
             "Gemini connected successfully, "
-            "but it returned an empty response."
-        )
-
-    except requests.exceptions.Timeout:
-        return "Gemini took too long to respond. Please try again."
-
-    except requests.exceptions.RequestException as e:
-        return (
-            "There was a problem communicating with Google Gemini.\n\n"
-            f"{type(e).__name__}: {e}"
+            "but returned an empty response."
         )
 
     except Exception as e:
+
+        error_text = str(e)
+
+        error_lower = error_text.lower()
+
+        if (
+            "401" in error_lower
+            or "unauthenticated" in error_lower
+            or "authentication" in error_lower
+            or "invalid api key" in error_lower
+            or "invalid authentication" in error_lower
+        ):
+
+            return (
+                "Google Gemini authentication failed.\n\n"
+                "The app reached Google, but the Gemini API key "
+                "was rejected.\n\n"
+                "Check that GEMINI_API_KEY in "
+                ".streamlit/secrets.toml is a Gemini API key "
+                "created in Google AI Studio.\n\n"
+                "Do not use a Google OAuth token or login credential."
+            )
+
+        if (
+            "404" in error_lower
+            or "not found" in error_lower
+        ):
+
+            return (
+                "The Gemini model could not be found.\n\n"
+                f"Model: {GEMINI_MODEL}\n\n"
+                f"{type(e).__name__}: {e}"
+            )
+
+        if (
+            "429" in error_lower
+            or "quota" in error_lower
+            or "rate limit" in error_lower
+        ):
+
+            return (
+                "Gemini is currently rate-limited or "
+                "the API quota has been reached.\n\n"
+                f"{type(e).__name__}: {e}"
+            )
+
         return (
-            "Gemini AI error.\n\n"
+            "There was a problem communicating with "
+            "Google Gemini.\n\n"
             f"{type(e).__name__}: {e}"
         )
 
@@ -1453,17 +1096,6 @@ def ask_gemini(prompt):
 
 def get_ollama_url():
 
-    """
-    Get the Ollama server address.
-
-    Local computer:
-        http://localhost:11434
-
-    Optional remote server:
-        Set OLLAMA_URL in Streamlit Secrets
-        or as an environment variable.
-    """
-
     try:
 
         url = st.secrets.get(
@@ -1472,13 +1104,11 @@ def get_ollama_url():
         )
 
         if url:
-
             return str(
                 url
             ).strip().rstrip("/")
 
     except Exception:
-
         pass
 
     url = os.getenv(
@@ -1487,7 +1117,6 @@ def get_ollama_url():
     ).strip().rstrip("/")
 
     if url:
-
         return url
 
     return "http://localhost:11434"
@@ -1508,17 +1137,13 @@ def ask_ollama(prompt):
     try:
 
         response = requests.post(
-
             api_url,
-
             json={
                 "model": "llama3.2",
                 "prompt": prompt,
                 "stream": False
             },
-
             timeout=120
-
         )
 
         if response.status_code != 200:
@@ -1592,9 +1217,7 @@ def ask_ai(prompt):
     for local testing or future use.
     """
 
-    return ask_gemini(
-        prompt
-    )
+    return ask_gemini(prompt)
 
 
 # ============================================================
@@ -1604,7 +1227,6 @@ def ask_ai(prompt):
 def get_fashn_category(category):
 
     tops = [
-
         "Top",
         "T-Shirt",
         "Shirt",
@@ -1614,28 +1236,22 @@ def get_fashn_category(category):
         "Hoodie",
         "Jacket",
         "Coat"
-
     ]
 
     bottoms = [
-
         "Skirt",
         "Pants",
         "Jeans",
         "Shorts"
-
     ]
 
     if category in tops:
-
         return "tops"
 
     if category in bottoms:
-
         return "bottoms"
 
     if category == "Dress":
-
         return "one-pieces"
 
     return None
@@ -1648,14 +1264,12 @@ def get_fashn_category(category):
 def extract_image_from_result(result):
 
     if result is None:
-
         return None
 
     if isinstance(
         result,
         Image.Image
     ):
-
         return result
 
     if isinstance(
@@ -1670,7 +1284,6 @@ def extract_image_from_result(result):
             )
 
             if extracted is not None:
-
                 return extracted
 
         return None
@@ -1681,14 +1294,12 @@ def extract_image_from_result(result):
     ):
 
         for key in [
-
             "image",
             "images",
             "output",
             "path",
             "url",
             "value"
-
         ]:
 
             if key in result:
@@ -1698,7 +1309,6 @@ def extract_image_from_result(result):
                 )
 
                 if extracted is not None:
-
                     return extracted
 
         return None
@@ -1707,7 +1317,6 @@ def extract_image_from_result(result):
         result,
         str
     ):
-
         return result
 
     if hasattr(
@@ -1722,7 +1331,6 @@ def extract_image_from_result(result):
         )
 
         if path:
-
             return path
 
     if hasattr(
@@ -1737,7 +1345,6 @@ def extract_image_from_result(result):
         )
 
         if url:
-
             return url
 
     return result
@@ -1776,12 +1383,8 @@ def display_tryon_output(output):
     ):
 
         if (
-            output.startswith(
-                "http://"
-            )
-            or output.startswith(
-                "https://"
-            )
+            output.startswith("http://")
+            or output.startswith("https://")
         ):
 
             try:
@@ -1808,14 +1411,13 @@ def display_tryon_output(output):
             except Exception as e:
 
                 st.error(
-                    f"Could not download the generated image: {e}"
+                    "Could not download the generated image: "
+                    f"{e}"
                 )
 
             return
 
-        if os.path.exists(
-            output
-        ):
+        if os.path.exists(output):
 
             try:
 
@@ -1832,14 +1434,13 @@ def display_tryon_output(output):
             except Exception as e:
 
                 st.error(
-                    f"Could not open the generated image: {e}"
+                    "Could not open the generated image: "
+                    f"{e}"
                 )
 
             return
 
-        st.write(
-            output
-        )
+        st.write(output)
 
         return
 
@@ -1855,9 +1456,7 @@ def display_tryon_output(output):
 
     else:
 
-        st.write(
-            output
-        )
+        st.write(output)
 
 
 # ============================================================
@@ -1880,7 +1479,7 @@ def generate_virtual_tryon(
             None,
             (
                 "The Hugging Face Gradio client is not installed.\n\n"
-                "Run this in Command Prompt:\n\n"
+                "Run this in PowerShell:\n\n"
                 "py -3.14 -m pip install -U gradio_client"
             )
         )
@@ -1949,7 +1548,8 @@ def generate_virtual_tryon(
         return (
             None,
             (
-                "Could not connect to the FASHN Hugging Face Space.\n\n"
+                "Could not connect to the FASHN "
+                "Hugging Face Space.\n\n"
                 f"{type(e).__name__}: {e}\n\n"
                 "Check that your Hugging Face token is valid."
             )
@@ -1999,7 +1599,6 @@ def generate_virtual_tryon(
     except Exception as e:
 
         error_text = str(e)
-
         error_lower = error_text.lower()
 
         if (
@@ -2051,12 +1650,9 @@ def generate_virtual_tryon(
 # ============================================================
 
 if "wardrobe" not in st.session_state:
-
     st.session_state.wardrobe = load_wardrobe()
 
-
 if "profile" not in st.session_state:
-
     st.session_state.profile = load_profile()
 
 
@@ -2106,9 +1702,7 @@ if page == "🏠 Home":
 
     st.divider()
 
-    col1, col2, col3 = st.columns(
-        3
-    )
+    col1, col2, col3 = st.columns(3)
 
     with col1:
 
@@ -2123,9 +1717,7 @@ if page == "🏠 Home":
 
         st.metric(
             "🎨 Aesthetics",
-            len(
-                AESTHETICS
-            )
+            len(AESTHETICS)
         )
 
     with col3:
@@ -2182,17 +1774,11 @@ elif page == "👚 My Wardrobe":
 
     else:
 
-        columns = st.columns(
-            4
-        )
+        columns = st.columns(4)
 
-        for index, item in enumerate(
-            filtered
-        ):
+        for index, item in enumerate(filtered):
 
-            with columns[
-                index % 4
-            ]:
+            with columns[index % 4]:
 
                 image_path = item.get(
                     "image",
@@ -2222,14 +1808,10 @@ elif page == "👚 My Wardrobe":
                     f"{item.get('color', '')}"
                 )
 
-                if item.get(
-                    "notes"
-                ):
+                if item.get("notes"):
 
                     st.caption(
-                        item.get(
-                            "notes"
-                        )
+                        item.get("notes")
                     )
 
                 if st.button(
@@ -2242,27 +1824,15 @@ elif page == "👚 My Wardrobe":
                         if os.path.exists(
                             image_path
                         ):
-
-                            os.remove(
-                                image_path
-                            )
+                            os.remove(image_path)
 
                     except OSError:
-
                         pass
 
                     st.session_state.wardrobe = [
-
                         x
-
                         for x in wardrobe
-
-                        if x.get(
-                            "id"
-                        ) != item.get(
-                            "id"
-                        )
-
+                        if x.get("id") != item.get("id")
                     ]
 
                     save_wardrobe(
@@ -2303,9 +1873,7 @@ elif page == "📸 Add Clothes":
 
                 image = Image.open(
                     uploaded_file
-                ).convert(
-                    "RGB"
-                )
+                ).convert("RGB")
 
                 st.image(
                     image,
@@ -2342,15 +1910,12 @@ elif page == "📸 Add Clothes":
                             suggested_cat
                         )
                         if suggested_cat in CATEGORIES
-                        else len(
-                            CATEGORIES
-                        ) - 1
+                        else len(CATEGORIES) - 1
                     ),
                     key=f"category_{uploaded_file.name}"
                 )
 
                 color_options = [
-
                     "Black",
                     "White",
                     "Gray",
@@ -2365,7 +1930,6 @@ elif page == "📸 Add Clothes":
                     "Brown",
                     "Beige",
                     "Navy"
-
                 ]
 
                 color = st.selectbox(
@@ -2410,14 +1974,11 @@ elif page == "📸 Add Clothes":
                     )[1].lower()
 
                     if extension not in [
-
                         ".jpg",
                         ".jpeg",
                         ".png",
                         ".webp"
-
                     ]:
-
                         extension = ".jpg"
 
                     image_path = os.path.join(
@@ -2430,27 +1991,18 @@ elif page == "📸 Add Clothes":
                     )
 
                     new_item = {
-
                         "id": file_id,
-
                         "name": (
                             name.strip()
                             or default_name
                         ),
-
                         "category": category,
-
                         "color": color,
-
                         "notes": notes,
-
                         "style_tags": style_tags,
-
                         "image": image_path,
-
                         "created_at":
                             datetime.now().isoformat()
-
                     }
 
                     st.session_state.wardrobe.append(
@@ -2560,7 +2112,6 @@ elif page == "📝 Style Quiz":
     ):
 
         profile = {
-
             "favorite_colors":
                 favorite_colors,
 
@@ -2578,7 +2129,6 @@ elif page == "📝 Style Quiz":
 
             "dislikes":
                 dislikes
-
         }
 
         st.session_state.profile = profile
@@ -2647,9 +2197,7 @@ elif page == "✨ Outfit Generator":
                     )
                 )
 
-                for index, item in enumerate(
-                    outfit
-                ):
+                for index, item in enumerate(outfit):
 
                     with columns[
                         index % len(columns)
@@ -2705,9 +2253,23 @@ elif page == "🤖 AI Stylist":
 
     if get_gemini_api_key():
 
-        st.success(
-            "✨ AI Stylist is powered by Google Gemini."
-        )
+        if genai is not None:
+
+            st.success(
+                "✨ AI Stylist is powered by Google Gemini."
+            )
+
+        else:
+
+            st.warning(
+                "⚠️ Gemini API key found, but the "
+                "google-genai package is not installed."
+            )
+
+            st.code(
+                "py -3.14 -m pip install -U google-genai",
+                language="text"
+            )
 
     else:
 
@@ -2787,9 +2349,12 @@ elif page == "👤 Virtual Try-On":
     )
 
     st.info(
-        "💡 Your saved photo stays on this computer "
-        "inside the wardrobe_data folder. "
-        "The try-on request is sent to the FASHN Hugging Face Space."
+        """
+        💡 Your saved photo stays on this computer
+        inside the wardrobe_data folder.
+        The try-on request is sent to the FASHN
+        Hugging Face Space.
+        """
     )
 
     # --------------------------------------------------------
@@ -2857,9 +2422,7 @@ HF_TOKEN = "hf_your_token_here"
 
             user_image = Image.open(
                 uploaded_photo
-            ).convert(
-                "RGB"
-            )
+            ).convert("RGB")
 
             st.image(
                 user_image,
@@ -2912,9 +2475,7 @@ HF_TOKEN = "hf_your_token_here"
 
             saved_image = Image.open(
                 USER_PHOTO_FILE
-            ).convert(
-                "RGB"
-            )
+            ).convert("RGB")
 
             st.image(
                 saved_image,
@@ -2953,18 +2514,14 @@ HF_TOKEN = "hf_your_token_here"
         else:
 
             valid_items = [
-
                 item
-
                 for item in wardrobe
-
                 if os.path.exists(
                     item.get(
                         "image",
                         ""
                     )
                 )
-
             ]
 
             if not valid_items:
@@ -2981,63 +2538,38 @@ HF_TOKEN = "hf_your_token_here"
                     "Choose a clothing item",
 
                     options=[
-
-                        item.get(
-                            "id"
-                        )
-
+                        item.get("id")
                         for item in valid_items
-
                     ],
 
                     format_func=lambda item_id: next(
-
                         (
-
                             item.get(
                                 "name",
                                 "Unnamed item"
                             )
-
                             for item in valid_items
-
-                            if item.get(
-                                "id"
-                            ) == item_id
-
+                            if item.get("id") == item_id
                         ),
-
                         "Unnamed item"
-
                     ),
 
                     key="try_on_item"
-
                 )
 
                 selected_item = next(
-
                     (
-
                         item
-
                         for item in valid_items
-
-                        if item.get(
-                            "id"
-                        ) == selected_item_id
-
+                        if item.get("id") ==
+                        selected_item_id
                     ),
-
                     None
-
                 )
 
                 if selected_item:
 
-                    col1, col2 = st.columns(
-                        2
-                    )
+                    col1, col2 = st.columns(2)
 
                     # ------------------------------------------------
                     # PERSON
@@ -3148,12 +2680,10 @@ HF_TOKEN = "hf_your_token_here"
                         )
 
                     if category in [
-
                         "Shoes",
                         "Bag",
                         "Accessory",
                         "Other"
-
                     ]:
 
                         st.warning(
@@ -3183,7 +2713,8 @@ HF_TOKEN = "hf_your_token_here"
                         elif not get_huggingface_token():
 
                             st.error(
-                                "Hugging Face authentication is not configured."
+                                "Hugging Face authentication "
+                                "is not configured."
                             )
 
                             st.info(
@@ -3218,19 +2749,16 @@ HF_TOKEN = "hf_your_token_here"
                                 """
                             ):
 
-                                output, error = generate_virtual_tryon(
-
-                                    USER_PHOTO_FILE,
-
-                                    selected_item.get(
-                                        "image",
-                                        ""
-                                    ),
-
-                                    category,
-
-                                    garment_description
-
+                                output, error = (
+                                    generate_virtual_tryon(
+                                        USER_PHOTO_FILE,
+                                        selected_item.get(
+                                            "image",
+                                            ""
+                                        ),
+                                        category,
+                                        garment_description
+                                    )
                                 )
 
                             if error:
@@ -3276,7 +2804,7 @@ HF_TOKEN = "hf_your_token_here"
                 )
 
                 st.success(
-                    "Your saved photo was removed."
+                    "Your photo was removed."
                 )
 
                 st.rerun()
